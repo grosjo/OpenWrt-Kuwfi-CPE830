@@ -13,4 +13,4 @@ Flash instruction under vendor firmware:
 - cd /tmp
 - fw_setenv bootcmd "bootm 0x9f050000"
 - mtd erase firmware
-- mtd -r write lede-ar71xx-generic-ap90q-squashfs-sysupgrade.bin firmware
+- mtd -r write openwrt-18.06.2-ar71xx-generic-cpe830-squashfs-sysupgrade.bin firmware
