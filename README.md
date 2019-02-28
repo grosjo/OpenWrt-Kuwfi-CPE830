@@ -1,8 +1,7 @@
-# OpenWrt-Yuncore-Kuwfi-CPE830D
-How to install OpenWrt on Yuncore/KuWfi 830
+# How to install OpenWrt on Yuncore/KuWfi 830
 
 
-Flash instruction under vendor fimrware, using telnet/SSH:
+Flash instruction under vendor firmware:
 
 1. Connect PC with 192.168.1.x address to WAN port
 2. Power up device normally
