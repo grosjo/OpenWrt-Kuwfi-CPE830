@@ -11,6 +11,6 @@ Flash instruction under vendor firmware:
 6. Connect PC with 192.168.188.x address to LAN port, SSH to 192.168.188.253
 7. Invoke:
 - cd /tmp
-- fw_setenv bootcmd "bootm 0x9f050000"
-- mtd erase firmware
-- mtd -r write openwrt-18.06.2-ar71xx-generic-cpe830-squashfs-sysupgrade.bin firmware
+- fw_setenv bootcmd "bootm 0x9fe80000 || bootm 0x9f050000"
+- fw_setenv bootargs "console=ttyS0,115200 rootfstype=squashfs,jffs2 noinitrd"
+- mtd -e firmware -r write openwrt-18.06.2-ar71xx-generic-cpe830-squashfs-sysupgrade.bin firmware
