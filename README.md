@@ -1,4 +1,4 @@
-# How to install OpenWrt on KuWfi 830
+# How to install OpenWrt on KuWfi 830 / Yuncore 830
 
 
 Flash instruction under vendor firmware:
