@@ -16,5 +16,4 @@ sudo -u admin make defconfig
 sudo -u admin make -j16 download
 sudo -u admin make -j16
 cd ..
-gzip -9 kuwfi830/bin/targets/ath79/generic/openwrt-ath79-generic-kuwfi_830d-squashfs-sysupgrade.bin
-mv kuwfi830/bin/targets/ath79/generic/openwrt-ath79-generic-kuwfi_830d-squashfs-sysupgrade.bin.gz FOLDER_WHERE_WOU_WANT
+mv kuwfi830/bin/targets/ath79/generic/openwrt-ath79-generic-kuwfi_830d-squashfs-sysupgrade.bin FOLDER_WHERE_WOU_WANT
