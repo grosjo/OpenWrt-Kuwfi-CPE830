@@ -1,5 +1,6 @@
 # How to install OpenWrt on KuWfi 830 / Yuncore 830
 
+## Option 1
 
 Flash instruction under vendor firmware:
 
@@ -16,3 +17,18 @@ Flash instruction under vendor firmware:
 - fw_setenv bootargs "console=ttyS0,115200 rootfstype=squashfs,jffs2 noinitrd"
 - mtd -e firmware -r write upgrade.bin firmware
 8. Device shall be booting on 192.168.1.1 as default
+
+
+## Option 2
+
+Same as before but compiling your own firmware
+
+Here is the script to compile :
+https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/compile_kuwfi830.sh
+
+The file "config_kuwfi830 is :
+https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/config_kuwfi830
+(You may change it as you wish)
+
+Use the firmware generated instead of the firmware taken from downloads.openwrt.org (in step 5 above)
+
