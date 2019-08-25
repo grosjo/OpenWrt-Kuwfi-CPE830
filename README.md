@@ -21,7 +21,7 @@ Flash instruction under vendor firmware:
 
 ## Option 2
 
-Same as before but compiling your own firmware
+Compiling your own firmware
 
 Here is the script to compile :
 https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/compile_kuwfi830.sh
@@ -30,5 +30,10 @@ The file "config_kuwfi830 is :
 https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/config_kuwfi830
 (You may change it as you wish)
 
-Use the firmware generated instead of the firmware taken from downloads.openwrt.org (in step 5 above)
 
+1. Connect PC with 192.168.0.141 to WAN port
+2. Install a TFTP server on your PC ('atftp' is doing the job for instance)
+3. Copy ./bin/targets/ath79/generic/openwrt-ath79-generic-yuncore_cpe830-squashfs-tftp.bin in the TFTP folder as upgrade.bin
+4. Power up device pushing the 'reset' button
+5. The device shall upload upgrade.bin, install it and reboot
+6. Device shall be booting on 192.168.1.1 as default on LAN port (note : you need to change your cable from WAN to LAN)
