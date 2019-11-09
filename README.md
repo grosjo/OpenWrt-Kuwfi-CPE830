@@ -30,6 +30,8 @@ The file "config_kuwfi830 is :
 https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/config_kuwfi830
 (You may change it as you wish)
 
+A pre-compiled version (Oct 2019) is here
+https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/upgrade.bin
 
 1. Connect PC with 192.168.0.141 to WAN port
 2. Install a TFTP server on your PC ('atftp' is doing the job for instance)
