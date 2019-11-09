@@ -23,14 +23,14 @@ Flash instruction under vendor firmware:
 
 Compiling your own firmware
 
-Here is the script to compile :
+Here is the script to compile :<br />
 https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/compile_kuwfi830.sh
 
-The file "config_kuwfi830 is :
-https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/config_kuwfi830
+The file "config_kuwfi830 is :<br />
+https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/config_kuwfi830<br />
 (You may change it as you wish)
 
-A pre-compiled version (Oct 2019) is here
+A pre-compiled version (Oct 2019) is here :<br />
 https://github.com/grosjo/OpenWrt-Kuwfi-CPE830/blob/master/upgrade.bin
 
 1. Connect PC with 192.168.0.141 to WAN port
