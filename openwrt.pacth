@@ -1,0 +1,209 @@
+From 867a82a0b62c966db378bcfa1419172ccb023e43 Mon Sep 17 00:00:00 2001
+From: Joan Moreau <jom@grosjo.net>
+Date: Tue, 24 Dec 2019 07:28:22 +0000
+Subject: [PATCH] ath79: add support for KuWfi CPE830(D) / YunCore CPE830(D)
+
+Board uses ath9k driver (and not ath10k as previously stated in Openwrt)
+
+Short specification:
+
+    650/600/216 MHz (CPU/DDR/AHB)
+    2x 10/100 Mbps Ethernet, passive PoE support
+    64 MB of RAM (DDR2)
+    16 MB of FLASH
+    2T2R 2.4 GHz with external PA, up to 30 dBm (1000mW)
+    2x internal 14 dBi antennas
+    8x LED, 1x button
+    No UART on PCB on some versions
+    Display panel with 2x buttons (F/N) not supported (and not relevant in OpenWrt)
+
+Flash instructions
+
+    Connect PC with 192.168.0.141 to WAN port
+    Install a TFTP server on your PC ('atftp' is doing the job for instance)
+    Copy your firmware in the TFTP folder as upgrade.bin
+    Power up device pushing the 'reset' button
+    The device shall upload upgrade.bin, install it and reboot
+    Device shall be booting on 192.168.1.1 as default
+
+Signed-off by: Joan Moreau jom@grosjo.net
+---
+ .../ath79/dts/qca9531_yuncore_cpe830.dts      | 123 ++++++++++++++++++
+ .../generic/base-files/etc/board.d/01_leds    |   9 ++
+ target/linux/ath79/image/generic.mk           |  13 ++
+ 3 files changed, 145 insertions(+)
+ create mode 100644 target/linux/ath79/dts/qca9531_yuncore_cpe830.dts
+
+diff --git a/target/linux/ath79/dts/qca9531_yuncore_cpe830.dts b/target/linux/ath79/dts/qca9531_yuncore_cpe830.dts
+new file mode 100644
+index 00000000000000..6ea6847e80239a
+--- /dev/null
++++ b/target/linux/ath79/dts/qca9531_yuncore_cpe830.dts
+@@ -0,0 +1,123 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++#include "qca953x.dtsi"
++
++/ {
++       compatible = "yuncore,cpe830", "qca,qca9531";
++       model = "YunCore/KuWfi CPE830(D)";
++
++       chosen {
++               bootargs = "console=ttyS0,115200";
++       };
++
++       keys {
++               compatible = "gpio-keys";
++
++               reset {
++                       label = "reset";
++                       linux,code = <KEY_RESTART>;
++                       gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
++               };
++       };
++
++       leds {
++               compatible = "gpio-leds";
++
++               lan {
++                       label = "cpe830:green:lan";
++                       gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
++               };
++
++               wan {
++                       label = "cpe830:green:wan";
++                       gpios = <&gpio 4 GPIO_ACTIVE_LOW>;
++               };
++
++               wlan {
++                       label = "cpe830:green:wlan";
++                       gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
++                       linux,default-trigger = "phy0tpt";
++               };
++
++               link1 {
++                       label = "cpe830:green:link1";
++                       gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
++               };
++
++               link2 {
++                       label = "cpe830:green:link2";
++                       gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
++               };
++
++               link3 {
++                       label = "cpe830:green:link3";
++                       gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
++               };
++
++               link4 {
++                       label = "cpe830:green:link4";
++                       gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
++               };
++       };
++};
++
++&spi {
++       status = "okay";
++
++       num-cs = <1>;
++
++       flash@0 {
++               compatible = "jedec,spi-nor";
++               reg = <0>;
++               spi-max-frequency = <25000000>;
++
++               partitions {
++                       compatible = "fixed-partitions";
++                       #address-cells = <1>;
++                       #size-cells = <1>;
++
++                       partition@0 {
++                               label = "u-boot";
++                               reg = <0x000000 0x040000>;
++                               read-only;
++                       };
++
++                       partition@40000 {
++                               label = "u-boot-env";
++                               reg = <0x040000 0x010000>;
++                       };
++
++                       partition@50000 {
++                               compatible = "denx,uimage";
++                               label = "firmware";
++                               reg = <0x050000 0xfa0000>;
++                       };
++
++                       art: partition@ff0000 {
++                               label = "art";
++                               reg = <0xff0000 0x010000>;
++                               read-only;
++                       };
++               };
++       };
++};
++
++&eth0 {
++       status = "okay";
++       mtd-mac-address = <&art 0x0>;
++       phy-handle = <&swphy4>;
++};
++
++&eth1 {
++       status = "okay";
++       mtd-mac-address = <&art 0x6>;
++};
++
++&wmac {
++       status = "okay";
++       mtd-cal-data = <&art 0x1000>;
++};
+diff --git a/target/linux/ath79/generic/base-files/etc/board.d/01_leds b/target/linux/ath79/generic/base-files/etc/board.d/01_leds
+index be0c3b1217768e..3475a060ed005f 100755
+--- a/target/linux/ath79/generic/base-files/etc/board.d/01_leds
++++ b/target/linux/ath79/generic/base-files/etc/board.d/01_leds
+@@ -308,6 +308,15 @@ yuncore,a770)
+        ucidef_set_led_netdev "wan" "WAN" "$boardname:green:wan" "eth1"
+        ucidef_set_led_switch "lan" "LAN" "$boardname:green:lan" "switch0" "0x10"
+        ;;
++yuncore,cpe830)
++       ucidef_set_led_netdev "wan" "WAN" "$boardname:green:wan" "eth1"
++       ucidef_set_led_switch "lan" "LAN" "$boardname:green:lan" "switch0" "0x10"
++       ucidef_set_rssimon "wlan0" "200000" "1"
++       ucidef_set_led_rssi "rssilow" "RSSILOW" "$boardname:green:link1" "wlan0" "1" "100"
++       ucidef_set_led_rssi "rssimediumlow" "RSSIMEDIUMLOW" "$boardname:green:link2" "wlan0" "26" "100"
++       ucidef_set_led_rssi "rssimediumhigh" "RSSIMEDIUMHIGH" "$boardname:green:link3" "wlan0" "51" "100"
++       ucidef_set_led_rssi "rssihigh" "RSSIHIGH" "$boardname:green:link4" "wlan0" "76" "100"
++       ;;
+ zbtlink,zbt-wd323)
+        ucidef_set_led_switch "lan1" "LAN1" "zbt-wd323:orange:lan1" "switch0" "0x10"
+        ucidef_set_led_switch "lan2" "LAN2" "zbt-wd323:orange:lan2" "switch0" "0x08"
+diff --git a/target/linux/ath79/image/generic.mk b/target/linux/ath79/image/generic.mk
+index e92dbc99d61e46..33c9100575b153 100644
+--- a/target/linux/ath79/image/generic.mk
++++ b/target/linux/ath79/image/generic.mk
+@@ -1323,6 +1323,19 @@ define Device/yuncore_a782
+ endef
+ TARGET_DEVICES += yuncore_a782
+
++define Device/yuncore_cpe830
++  SOC := qca9531
++  DEVICE_VENDOR := YunCore
++  DEVICE_MODEL := CPE830(D)
++  DEVICE_ALT0_VENDOR = KuWfi
++  DEVICE_ALT0_MODEL = CPE830(D)
++  IMAGE_SIZE := 16000k
++  IMAGES += tftp.bin
++  IMAGE/tftp.bin := $$(IMAGE/sysupgrade.bin) | yuncore-tftp-header-16m
++  DEVICE_PACKAGES := rssileds -uboot-envtools swconfig
++endef
++TARGET_DEVICES += yuncore_cpe830
++
+ define Device/yuncore_xd4200
+   SOC := qca9563
+   DEVICE_VENDOR := YunCore
