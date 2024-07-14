@@ -28,17 +28,17 @@ Flash instructions
 
 Signed-off by: Joan Moreau jom@grosjo.net
 ---
- .../ath79/dts/qca9531_yuncore_cpe830.dts      | 123 ++++++++++++++++++
+ .../ath79/dts/qca9533_yuncore_cpe830.dts      | 123 ++++++++++++++++++
  .../generic/base-files/etc/board.d/01_leds    |   9 ++
  target/linux/ath79/image/generic.mk           |  13 ++
  3 files changed, 145 insertions(+)
- create mode 100644 target/linux/ath79/dts/qca9531_yuncore_cpe830.dts
+ create mode 100644 target/linux/ath79/dts/qca9533_yuncore_cpe830.dts
 
-diff --git a/target/linux/ath79/dts/qca9531_yuncore_cpe830.dts b/target/linux/ath79/dts/qca9531_yuncore_cpe830.dts
+diff --git a/target/linux/ath79/dts/qca9533_yuncore_cpe830.dts b/target/linux/ath79/dts/qca9533_yuncore_cpe830.dts
 new file mode 100644
 index 00000000000000..6ea6847e80239a
 --- /dev/null
-+++ b/target/linux/ath79/dts/qca9531_yuncore_cpe830.dts
++++ b/target/linux/ath79/dts/qca9533_yuncore_cpe830.dts
 @@ -0,0 +1,123 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 +/dts-v1/;
@@ -49,7 +49,7 @@ index 00000000000000..6ea6847e80239a
 +#include "qca953x.dtsi"
 +
 +/ {
-+       compatible = "yuncore,cpe830", "qca,qca9531";
++       compatible = "yuncore,cpe830", "qca,qca9533";
 +       model = "YunCore/KuWfi CPE830(D)";
 +
 +       chosen {
@@ -150,18 +150,21 @@ index 00000000000000..6ea6847e80239a
 +
 +&eth0 {
 +       status = "okay";
-+       mtd-mac-address = <&art 0x0>;
 +       phy-handle = <&swphy4>;
++       nvmem-cells = <&macaddr_art_0>;
++       nvmem-cell-names = "mac-address";
 +};
 +
 +&eth1 {
 +       status = "okay";
-+       mtd-mac-address = <&art 0x6>;
++       nvmem-cells = <&macaddr_art_6>;
++       nvmem-cell-names = "mac-address";
 +};
 +
 +&wmac {
 +       status = "okay";
-+       mtd-cal-data = <&art 0x1000>;
++       nvmem-cells = <&cal_art_1000>;
++       nvmem-cell-names = "calibration";
 +};
 diff --git a/target/linux/ath79/generic/base-files/etc/board.d/01_leds b/target/linux/ath79/generic/base-files/etc/board.d/01_leds
 index be0c3b1217768e..3475a060ed005f 100755
